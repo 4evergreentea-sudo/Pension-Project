@@ -9,7 +9,6 @@ import { downloadConsultationsAsCSV } from './lib/csv';
 // Components
 import { Header } from './components/Header';
 import { TabNavigation } from './components/TabNavigation';
-import { DisclaimerBox } from './components/DisclaimerBox';
 import { ProfileForm } from './components/ProfileForm';
 import { AssetInputTable } from './components/AssetInputTable';
 import { PortfolioChart } from './components/PortfolioChart';

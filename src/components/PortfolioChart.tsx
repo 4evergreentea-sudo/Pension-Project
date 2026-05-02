@@ -1,3 +1,16 @@
+import React from 'react';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+
+interface ChartData {
+  name: string;
+  value: number;
+}
+
+interface PortfolioChartProps {
+  title: string;
+  data: ChartData[];
+}
+
 // High-contrast KB-inspired palette
 const COLORS = [
   '#FFCC00', // KB Gold
@@ -14,7 +27,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
   const RADIAN = Math.PI / 180;
   
   // Calculate total for percentage if percent prop is missing
-  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+  const totalValue = data.reduce((sum: number, item: ChartData) => sum + item.value, 0);
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, value, name, index }: any) => {
     // If percent is not provided by Recharts, calculate it
@@ -90,7 +103,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
                 animationBegin={0}
                 animationDuration={1500}
               >
-                {data.map((_, index) => (
+                {data.map((_, index: number) => (
                   <Cell 
                     key={`cell-${index}`} 
                     fill={COLORS[index % COLORS.length]} 
@@ -104,7 +117,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
                 <tspan x="50%" dy="1.2em" className="text-base fill-gray-800 font-black italic">100%</tspan>
               </text>
               <Tooltip 
-                formatter={(value: any, name: string) => [
+                formatter={(value: any, name: any) => [
                   <span className="font-black text-[var(--color-kb-dark)]">{value}%</span>,
                   <span className="text-gray-500 font-bold">{name}</span>
                 ]}
@@ -121,7 +134,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
 
         {/* Data Table Area */}
         <div className="space-y-2.5 max-h-[260px] overflow-y-auto pr-2 custom-scrollbar">
-          {data.map((item, index) => (
+          {data.map((item: ChartData, index: number) => (
             <div key={item.name} className="flex items-center justify-between p-3 rounded-2xl bg-white border border-gray-50 shadow-sm hover:border-[var(--color-kb-gold)] transition-all group">
               <div className="flex items-center space-x-3">
                 <div 
