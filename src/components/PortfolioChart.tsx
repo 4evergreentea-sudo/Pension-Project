@@ -12,26 +12,53 @@ const COLORS = [
 
 export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) => {
   const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }: any) => {
+  
+  // Calculate total for percentage if percent prop is missing
+  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, value, name, index }: any) => {
+    // If percent is not provided by Recharts, calculate it
+    const displayPercent = percent ? percent : (value / totalValue);
+    const percentText = `${(displayPercent * 100).toFixed(0)}%`;
+    
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    const isSmall = percent < 0.1;
+    
+    // For very small slices, push label outside
+    const isSmall = displayPercent < 0.08;
 
     if (isSmall) {
       const labelRadius = outerRadius * 1.25;
       const lx = cx + labelRadius * Math.cos(-midAngle * RADIAN);
       const ly = cy + labelRadius * Math.sin(-midAngle * RADIAN);
       return (
-        <text x={lx} y={ly} fill="#666" textAnchor={lx > cx ? 'start' : 'end'} dominantBaseline="central" className="text-[9px] font-bold">
-          {`${name} (${(percent * 100).toFixed(0)}%)`}
+        <text 
+          x={lx} 
+          y={ly} 
+          fill="#666" 
+          textAnchor={lx > cx ? 'start' : 'end'} 
+          dominantBaseline="central" 
+          className="text-[10px] font-bold"
+        >
+          {`${name} ${percentText}`}
         </text>
       );
     }
 
+    // Determine text color based on slice brightness (KB Gold is bright)
+    const textColor = (index % COLORS.length === 0 || index % COLORS.length === 4) ? '#333' : 'white';
+
     return (
-      <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-[10px] font-black">
-        {`${(percent * 100).toFixed(0)}%`}
+      <text 
+        x={x} 
+        y={y} 
+        fill={textColor} 
+        textAnchor="middle" 
+        dominantBaseline="central" 
+        className="text-[11px] font-black"
+      >
+        {percentText}
       </text>
     );
   };
