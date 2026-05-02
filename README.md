@@ -1,4 +1,10 @@
-# 노후를 편안하게 연금부자서비스 (연금 투자 코치 v2)
+# Pension-Project
+
+KB 국민은행 최종 과제 - 연금부자서비스 (Pension Wealth Service)
+
+## 프로젝트 정보
+- **저장소**: [https://github.com/4evergreentea-sudo/Pension-Project](https://github.com/4evergreentea-sudo/Pension-Project)
+- **개발자**: 4evergreentea-sudo
 
 사용자가 직접 입력한 연금 자산을 Gemini 3 Flash AI가 진단하고, 은퇴 시점·위험성향·계좌 유형을 고려한 장기 모델 포트폴리오와 유망 투자 섹터 비중을 제안하는 모바일 최적화 웹 서비스입니다.
 
