@@ -158,14 +158,14 @@ function App() {
             </div>
           </div>
           <div className="flex-1 flex justify-center sm:justify-end relative">
-            <div className="w-64 h-64 sm:w-80 sm:h-80 relative z-10">
+            <div className="w-72 h-72 sm:w-96 sm:h-96 relative z-10">
               <img 
-                src="/kb_pension_hero_banner_1777697461912.png" 
-                alt="KB Pension Hero" 
-                className="w-full h-full object-contain drop-shadow-2xl"
+                src="/hero-ghibli.png" 
+                alt="KB Pension Ghibli Hero" 
+                className="w-full h-full object-cover rounded-3xl shadow-2xl border-4 border-white"
               />
             </div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#FFCC00]/10 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[var(--color-kb-gold)]/20 rounded-full blur-3xl"></div>
           </div>
         </div>
       </div>
