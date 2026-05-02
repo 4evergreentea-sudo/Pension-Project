@@ -128,6 +128,9 @@ function App() {
     }
   };
 
+  const [hasConsented, setHasConsented] = useState(false);
+  const [showDisclaimerModal, setShowDisclaimerModal] = useState(false);
+
   const scrollToInput = () => {
     document.getElementById('input-section')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -138,7 +141,7 @@ function App() {
       
       {/* New Hero Section: Focused Layout */}
       <div className="bg-white border-b border-gray-100 relative">
-        <div className="max-w-5xl mx-auto flex flex-col items-center">
+        <div className="max-w-5xl mx-auto flex flex-col items-center text-center">
           {/* Top 40% Illustration Area */}
           <div className="w-full h-48 sm:h-64 flex justify-center items-center relative overflow-hidden py-10">
             <div className="absolute inset-0 bg-[var(--color-kb-gold)] opacity-5"></div>
@@ -153,7 +156,7 @@ function App() {
           </div>
 
           {/* Text and Big Button Area */}
-          <div className="w-full px-6 pt-4 pb-12 text-center space-y-6">
+          <div className="w-full px-6 pt-4 pb-12 space-y-6">
             <div className="space-y-3">
               <h2 className="text-2xl sm:text-4xl font-black text-gray-900 leading-tight">
                 개인형 IRP 하시나요?
@@ -183,20 +186,34 @@ function App() {
         </div>
 
         {activeTab === 'consult' ? (
-          <div className="space-y-8 pb-20">
-            {/* Input Section */}
+          <div className="pb-20">
+            {/* Input Section: 2-Column Desktop Layout */}
             {!result && !loading && (
-              <div id="input-section" className="fade-in">
-                <div className="kb-card p-6 sm:p-10 mb-8">
-                  <div className="flex items-center space-x-2 mb-8">
-                    <div className="w-1.5 h-6 bg-[var(--color-kb-gold)] rounded-full"></div>
-                    <h2 className="text-xl font-bold text-gray-900">내 연금 정보 입력</h2>
+              <div id="input-section" className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start fade-in">
+                
+                {/* Left Side: Input Forms (2/3 Width) */}
+                <div className="lg:col-span-2 space-y-8">
+                  {error && <ErrorBox message={error} />}
+
+                  {/* Section 1: Customer Profile */}
+                  <div className="kb-card p-6 sm:p-10">
+                    <div className="flex items-center space-x-3 mb-8">
+                      <div className="p-2 bg-[#FFFDE7] rounded-xl">
+                        <svg className="w-6 h-6 text-[var(--color-kb-dark)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-black text-gray-800">내 연금 정보 입력</h2>
+                        <p className="text-xs text-gray-400 font-medium">정확한 진단을 위해 기본 정보를 알려주세요.</p>
+                      </div>
+                    </div>
+                    <ProfileForm 
+                      profile={profile} 
+                      onChange={(updates) => setProfile({ ...profile, ...updates })} 
+                    />
                   </div>
-                  <ProfileForm 
-                    profile={profile} 
-                    onChange={(updates) => setProfile({ ...profile, ...updates })} 
-                  />
-                  <div className="mt-10">
+
+                  {/* Section 2: Asset List */}
+                  <div className="kb-card p-6 sm:p-10">
                     <AssetInputTable 
                       assets={assets} 
                       onAdd={handleAddAsset} 
@@ -206,76 +223,71 @@ function App() {
                   </div>
                 </div>
 
-                <DisclaimerBox 
-                  accepted={profile.disclaimerAccepted} 
-                  onToggle={() => setProfile({ ...profile, disclaimerAccepted: !profile.disclaimerAccepted })} 
-                />
-
-                {error && <ErrorBox message={error} />}
-
-                <div className="mt-10">
-                  <button
-                    onClick={handleStartAnalysis}
-                    className="kb-button-primary w-full text-lg py-5 shadow-xl shadow-[#FFCC00]/20"
-                  >
-                    AI 포트폴리오 상담 시작하기
-                  </button>
-                </div>
-                {/* Disclaimer and Consent Section */}
-                <div className="mt-12 bg-white border border-gray-100 rounded-3xl p-6 sm:p-8 shadow-sm">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-start space-x-3">
-                      <div className="pt-1">
-                        <input
-                          id="consent"
-                          type="checkbox"
-                          checked={hasConsented}
-                          onChange={(e) => setHasConsented(e.target.checked)}
-                          className="w-5 h-5 rounded border-gray-300 text-[var(--color-kb-gold)] focus:ring-[var(--color-kb-gold)] cursor-pointer"
-                        />
+                {/* Right Side: Sticky Sidebar (1/3 Width) */}
+                <div className="lg:sticky lg:top-28 space-y-6">
+                  <div className="kb-card p-6 sm:p-8 bg-[var(--color-kb-bg)]/30 border-dashed">
+                    <h3 className="text-sm font-black text-gray-800 mb-4 flex items-center">
+                      <svg className="w-4 h-4 mr-2 text-[var(--color-kb-gold)]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
+                      분석 시작하기
+                    </h3>
+                    
+                    {/* Disclaimer and Consent Section */}
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-3 bg-white p-4 rounded-2xl border border-gray-100">
+                        <div className="pt-1">
+                          <input
+                            id="consent"
+                            type="checkbox"
+                            checked={hasConsented}
+                            onChange={(e) => setHasConsented(e.target.checked)}
+                            className="w-5 h-5 rounded border-gray-300 text-[var(--color-kb-gold)] focus:ring-[var(--color-kb-gold)] cursor-pointer"
+                          />
+                        </div>
+                        <label htmlFor="consent" className="cursor-pointer">
+                          <span className="block text-xs font-black text-gray-700 leading-snug">[필수] 투자 유의사항 동의</span>
+                          <button 
+                            onClick={() => setShowDisclaimerModal(true)}
+                            className="inline-block text-[10px] font-bold text-gray-400 border-b border-gray-200 mt-1"
+                          >
+                            상세내용 보기
+                          </button>
+                        </label>
                       </div>
-                      <label htmlFor="consent" className="cursor-pointer">
-                        <span className="block text-sm font-black text-gray-800">[필수] 투자 유의사항 및 면책고지 동의</span>
-                        <span className="block text-xs text-gray-400 mt-1">분석 결과는 참고용이며 실제 수익을 보장하지 않음에 동의합니다.</span>
-                      </label>
+
+                      <button
+                        onClick={handleStartAnalysis}
+                        disabled={loading || !hasConsented}
+                        className={`w-full py-6 text-lg font-black rounded-[1.5rem] transition-all duration-300 flex flex-col items-center justify-center space-y-1 ${
+                          !hasConsented 
+                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed border-2 border-dashed border-gray-200' 
+                            : 'bg-[var(--color-kb-dark)] text-[var(--color-kb-gold)] shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] hover:-translate-y-1'
+                        }`}
+                      >
+                        {loading ? (
+                          <div className="flex items-center space-x-2">
+                            <div className="w-5 h-5 border-2 border-[var(--color-kb-gold)] border-t-transparent rounded-full animate-spin"></div>
+                            <span>분석 중...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <span className="text-base">진단 리포트 생성</span>
+                            <span className="text-[10px] opacity-60 font-medium tracking-tight">AI 코칭 리포트 받기</span>
+                          </>
+                        )}
+                      </button>
+                      
+                      {!hasConsented && (
+                        <p className="text-[10px] text-amber-600 text-center font-bold animate-pulse">
+                          ⚠️ 동의 후 리포트 생성이 가능합니다.
+                        </p>
+                      )}
                     </div>
-                    <button 
-                      onClick={() => setShowDisclaimerModal(true)}
-                      className="text-xs font-bold text-gray-400 hover:text-[var(--color-kb-dark)] border-b border-gray-200 pb-0.5 transition-all"
-                    >
-                      자세히 보기
-                    </button>
                   </div>
 
-                  <div className="mt-10">
-                    <button
-                      onClick={handleAnalyze}
-                      disabled={loading || !hasConsented}
-                      className={`w-full py-6 text-xl font-black rounded-[2rem] transition-all duration-300 flex items-center justify-center space-x-3 ${
-                        !hasConsented 
-                          ? 'bg-gray-100 text-gray-300 cursor-not-allowed border-2 border-dashed border-gray-200' 
-                          : 'bg-[var(--color-kb-dark)] text-[var(--color-kb-gold)] shadow-[0_20px_50px_rgba(0,0,0,0.2)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.3)] hover:-translate-y-1.5 active:scale-[0.98]'
-                      }`}
-                    >
-                      {loading ? (
-                        <>
-                          <div className="w-6 h-6 border-3 border-[var(--color-kb-gold)] border-t-transparent rounded-full animate-spin"></div>
-                          <span>리포트 생성 중...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>나만의 연금 투자 리포트 생성하기</span>
-                          <svg className={`w-6 h-6 transition-transform ${hasConsented ? 'translate-x-1' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                          </svg>
-                        </>
-                      )}
-                    </button>
-                    {!hasConsented && (
-                      <p className="text-center text-xs text-amber-600 mt-4 font-bold animate-pulse">
-                        ⚠️ 유의사항에 동의하시면 분석을 시작할 수 있습니다.
-                      </p>
-                    )}
+                  <div className="px-4 py-2">
+                    <p className="text-[10px] text-gray-400 text-center leading-relaxed">
+                      본 서비스는 KB국민은행 MVP 프로젝트이며<br/>입력하신 데이터는 안전하게 보호됩니다.
+                    </p>
                   </div>
                 </div>
 
@@ -316,6 +328,7 @@ function App() {
                 )}
               </div>
             )}
+
 
             {/* Loading Section */}
             {loading && (
