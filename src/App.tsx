@@ -136,36 +136,43 @@ function App() {
     <div className="min-h-screen bg-[var(--color-kb-bg)] flex flex-col font-sans">
       <Header />
       
-      {/* Hero Banner Section */}
-      <div className="bg-white border-b border-gray-100 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-6 py-10 sm:py-16 flex flex-col sm:flex-row items-center justify-between gap-8">
-          <div className="flex-1 space-y-4 text-center sm:text-left">
-            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 leading-[1.2]">
-              개인형IRP <br className="hidden sm:block" />
-              하시나요?
-            </h2>
-            <p className="text-gray-500 text-sm sm:text-base font-medium leading-relaxed">
-              소득이 있는 국민 누구나<br/>
-              연말정산부터 퇴직연금까지 한번에!
-            </p>
-            <div className="pt-2">
-              <button 
-                onClick={scrollToInput}
-                className="kb-button-primary shadow-lg shadow-[#FFCC00]/30 px-8"
-              >
-                나만의 연금 진단받기
-              </button>
-            </div>
-          </div>
-          <div className="flex-1 flex justify-center sm:justify-end relative">
-            <div className="w-72 h-72 sm:w-96 sm:h-96 relative z-10">
+      {/* New Hero Section: Focused Layout */}
+      <div className="bg-white border-b border-gray-100 relative">
+        <div className="max-w-5xl mx-auto flex flex-col items-center">
+          {/* Top 40% Illustration Area */}
+          <div className="w-full h-48 sm:h-64 flex justify-center items-center relative overflow-hidden py-10">
+            <div className="absolute inset-0 bg-[var(--color-kb-gold)] opacity-5"></div>
+            <div className="w-48 h-48 sm:w-64 sm:h-64 relative z-10 transition-transform hover:scale-105 duration-700">
               <img 
                 src="/hero-ghibli.png" 
                 alt="KB Pension Ghibli Hero" 
-                className="w-full h-full object-cover rounded-3xl shadow-2xl border-4 border-white"
+                className="w-full h-full object-cover rounded-full shadow-xl border-4 border-white"
               />
             </div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[var(--color-kb-gold)]/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--color-kb-gold)]/20 rounded-full blur-3xl"></div>
+          </div>
+
+          {/* Text and Big Button Area */}
+          <div className="w-full px-6 pt-4 pb-12 text-center space-y-6">
+            <div className="space-y-3">
+              <h2 className="text-2xl sm:text-4xl font-black text-gray-900 leading-tight">
+                개인형 IRP 하시나요?
+              </h2>
+              <p className="text-gray-500 text-sm sm:text-base font-medium leading-relaxed">
+                소득이 있는 국민 누구나<br/>
+                연말정산부터 퇴직연금까지 한번에!
+              </p>
+            </div>
+            
+            <div className="pt-4 max-w-sm mx-auto">
+              <button 
+                onClick={scrollToInput}
+                className="kb-button-primary w-full text-xl py-6 sm:py-7 rounded-2xl shadow-2xl shadow-[#FFCC00]/40 flex items-center justify-center space-x-2 active:scale-95 transition-all"
+              >
+                <span className="font-black">나만의 연금 진단받기</span>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
