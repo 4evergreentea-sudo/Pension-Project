@@ -12,7 +12,6 @@ import { TabNavigation } from './components/TabNavigation';
 import { ProfileForm } from './components/ProfileForm';
 import { AssetInputTable } from './components/AssetInputTable';
 import { PortfolioChart } from './components/PortfolioChart';
-import { ResultCards } from './components/ResultCards';
 import { SectorGuide } from './components/SectorGuide';
 import { RebalancingSteps } from './components/RebalancingSteps';
 import { AccountChecklist } from './components/AccountChecklist';
@@ -40,11 +39,12 @@ function App() {
   // Profile State
   const [profile, setProfile] = useState<UserProfile>({
     name: '',
-    age: 0,
-    retirementAge: 0,
-    monthlyContribution: 0,
-    investmentExperience: '초보',
-    riskTolerance: '보통',
+    age: 40,
+    retirementAge: 60,
+    monthlyContribution: 1000000,
+    mainGoal: '안정적인 노후 자금 마련',
+    investmentExperience: '보통',
+    riskTolerance: '-10%',
     disclaimerAccepted: false,
   });
 
@@ -97,10 +97,21 @@ function App() {
 
     setLoading(true);
     try {
-      const consultationResult = await fetchConsultation(profile, assets);
+      // Calculate heuristic diagnosis for AI context
+      const { profile: heuristicRisk } = calculateRiskProfile(profile);
+      const heuristicTarget = getModelPortfolio(heuristicRisk);
+      const currentAllocation = getCurrentAllocation(assets);
+
+      const consultationResult = await fetchConsultation(
+        profile, 
+        assets, 
+        heuristicRisk, 
+        heuristicTarget
+      );
       setResult(consultationResult);
       
-      saveConsultation(profile, assets, consultationResult).catch(err => {
+      // Save to Supabase (non-blocking)
+      saveConsultation(profile, assets, consultationResult, currentAllocation).catch(err => {
         console.error('Failed to save consultation:', err);
       });
       
@@ -128,11 +139,19 @@ function App() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                   <div className="lg:col-span-8 space-y-12 pb-20">
                     <section id="profile-section" className="scroll-mt-32">
-                      <ProfileForm profile={profile} onChange={setProfile} />
+                      <ProfileForm 
+                        profile={profile} 
+                        onChange={(updates) => setProfile(prev => ({ ...prev, ...updates }))} 
+                      />
                     </section>
 
                     <section id="asset-section" className="scroll-mt-32">
-                      <AssetInputTable assets={assets} onChange={setAssets} />
+                      <AssetInputTable 
+                        assets={assets} 
+                        onChange={(id, updates) => setAssets(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a))} 
+                        onAdd={() => setAssets(prev => [...prev, { id: Math.random().toString(36).substr(2, 9), accountType: 'DC', assetCategory: '원리금보장·예금', sectorTag: '없음', amount: 0, memo: '' }])}
+                        onRemove={(id) => setAssets(prev => prev.filter(a => a.id !== id))}
+                      />
                     </section>
                   </div>
 
@@ -232,7 +251,7 @@ function App() {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-gradient-to-br from-[var(--color-kb-dark)] to-[#444] p-6 rounded-[2rem] text-white shadow-xl">
                           <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">위험 성향</p>
-                          <p className="text-xl font-black text-[var(--color-kb-gold)]">{calculateRiskProfile(profile)}</p>
+                          <p className="text-xl font-black text-[var(--color-kb-gold)]">{calculateRiskProfile(profile).profile}</p>
                         </div>
                         <div className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-lg">
                           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">분석 정확도</p>
@@ -247,11 +266,15 @@ function App() {
                           <span className="text-2xl">✨</span>
                           <span>AI 종합 진단 총평</span>
                         </h3>
-                        <div className="prose prose-sm max-w-none text-gray-600 font-bold leading-relaxed space-y-4">
-                          {result.diagnosis.split('\n').map((line, i) => (
-                            <p key={i} className={line.startsWith('-') ? 'pl-4 border-l-2 border-[var(--color-kb-gold)]' : ''}>
-                              {line.replace(/^- /, '')}
-                            </p>
+                        <div className="space-y-6">
+                          {result.diagnosis.map((diag, i) => (
+                            <div key={i} className="bg-gray-50/50 p-6 rounded-2xl border border-gray-100">
+                              <h4 className="font-black text-gray-800 mb-2 flex items-center space-x-2">
+                                <span className={`w-2 h-2 rounded-full ${diag.severity === '위험' ? 'bg-red-500' : diag.severity === '주의' ? 'bg-amber-500' : 'bg-green-500'}`}></span>
+                                <span>{diag.title}</span>
+                              </h4>
+                              <p className="text-sm font-bold text-gray-600 leading-relaxed">{diag.description}</p>
+                            </div>
                           ))}
                         </div>
                       </div>

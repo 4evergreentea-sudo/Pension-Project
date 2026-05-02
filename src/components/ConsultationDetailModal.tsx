@@ -113,7 +113,6 @@ export const ConsultationDetailModal: React.FC<ConsultationDetailModalProps> = (
 
             <RebalancingSteps 
               steps={consultation.rebalancingSteps} 
-              checklist={consultation.accountChecklist} 
             />
 
             {/* Script */}

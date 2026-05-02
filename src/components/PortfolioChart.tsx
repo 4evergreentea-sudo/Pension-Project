@@ -26,7 +26,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
   const RADIAN = Math.PI / 180;
   const totalValue = data.reduce((sum, item) => sum + item.value, 0);
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, value, name, index }: any) => {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, value, index }: any) => {
     const displayPercent = percent ? percent : (value / totalValue);
     const percentText = `${(displayPercent * 100).toFixed(0)}%`;
     
