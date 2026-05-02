@@ -71,7 +71,7 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
   };
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center h-auto">
       <div className="w-full flex items-center mb-6 px-1">
         <h4 className="text-sm font-black text-gray-800 flex items-center space-x-2">
           <div className="w-1 h-3 bg-gradient-to-b from-[var(--color-kb-gold)] to-[var(--color-kb-gold-dark)] rounded-full"></div>
@@ -79,16 +79,16 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
         </h4>
       </div>
       
-      {/* Chart Main Area */}
-      <div className="w-full h-[220px] relative mb-6">
+      {/* Chart Main Area - Fixed relative height for SVG but parent container is auto */}
+      <div className="w-full h-[240px] relative mb-8">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={65}
-              outerRadius={90}
+              innerRadius={70}
+              outerRadius={95}
               paddingAngle={4}
               dataKey="value"
               labelLine={false}
@@ -118,25 +118,26 @@ export const PortfolioChart: React.FC<PortfolioChartProps> = ({ title, data }) =
                 borderRadius: '1.5rem', 
                 border: 'none', 
                 boxShadow: '0 25px 50px -12px rgba(0,0,0,0.15)',
-                padding: '12px 16px'
+                padding: '12px 16px',
+                zIndex: 50
               }}
             />
           </PieChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Integrated Legend: Horizontal Flex Layout */}
+      {/* Integrated Legend: No max-height, flows naturally */}
       <div className="w-full flex flex-wrap justify-center gap-2">
         {data.map((item, index) => (
           <div 
             key={item.name} 
-            className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-full bg-gray-50/80 border border-gray-100 hover:border-gray-200 transition-all cursor-default group"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-full bg-white border border-gray-100 shadow-sm hover:border-[var(--color-kb-gold)] transition-all cursor-default group"
           >
             <div 
-              className="w-2 h-2 rounded-full shadow-sm" 
+              className="w-2.5 h-2.5 rounded-full shadow-sm" 
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             ></div>
-            <span className="text-[10px] font-bold text-gray-600 group-hover:text-gray-900 whitespace-nowrap">{item.name}</span>
+            <span className="text-[10px] font-black text-gray-700 group-hover:text-gray-900 whitespace-nowrap">{item.name}</span>
             <span className="text-[10px] font-black text-[var(--color-kb-dark)] opacity-70">{item.value}%</span>
           </div>
         ))}
