@@ -18,7 +18,7 @@ export const CustomerScript: React.FC<CustomerScriptProps> = ({ script }) => {
         
         <div className="flex-1 space-y-4">
           <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest flex items-center space-x-2">
-            <span>고객 응대 스크립트 가이드</span>
+            <span>고객님을 위한 가이드</span>
           </h3>
           
           <div className="relative">
