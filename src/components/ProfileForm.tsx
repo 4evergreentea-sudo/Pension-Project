@@ -51,14 +51,20 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onChange }) =
       </div>
 
       <div>
-        <label className="kb-label">월 추가 납입 가능액 (원)</label>
-        <input
-          type="number"
-          value={profile.monthlyContribution || ''}
-          onChange={(e) => onChange({ monthlyContribution: Number(e.target.value) })}
-          placeholder="예: 500,000"
-          className="kb-input"
-        />
+        <label className="kb-label">월 추가 납입 가능액 (백만 원)</label>
+        <div className="relative">
+          <input
+            type="number"
+            step="0.1"
+            value={profile.monthlyContribution ? profile.monthlyContribution / 1000000 : ''}
+            onChange={(e) => onChange({ monthlyContribution: Math.round(Number(e.target.value) * 1000000) })}
+            placeholder="예: 0.5 (50만 원)"
+            className="kb-input pr-16"
+          />
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">
+            백만 원
+          </div>
+        </div>
       </div>
 
       <div>
