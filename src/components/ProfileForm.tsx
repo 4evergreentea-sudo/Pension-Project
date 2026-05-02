@@ -75,18 +75,19 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onChange }) =
       <div className="space-y-1.5">
         <label className="kb-label mb-0">월 추가 납입 가능액</label>
         <p className="text-[11px] text-gray-400 mb-2">매월 추가로 연금 자산에 적립할 수 있는 금액입니다.</p>
-        <div className="relative">
-          <input
-            type="number"
-            step="0.1"
-            value={profile.monthlyContribution ? profile.monthlyContribution / 1000000 : ''}
-            onChange={(e) => onChange({ monthlyContribution: Math.round(Number(e.target.value) * 1000000) })}
-            placeholder="예: 0.5 (50만 원)"
-            className="kb-input pr-16"
-          />
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">
-            백만 원
-          </div>
+        <select
+          value={profile.monthlyContribution || ''}
+          onChange={(e) => onChange({ monthlyContribution: Number(e.target.value) })}
+          className="kb-input appearance-none cursor-pointer"
+        >
+          <option value="">선택</option>
+          {Array.from({ length: 15 }, (_, i) => (i + 1) * 100000).map(val => (
+            <option key={val} value={val}>{(val / 10000).toLocaleString()}만 원</option>
+          ))}
+        </select>
+        <div className="mt-3 flex items-center space-x-2 text-[10px] font-black text-amber-700 bg-amber-50 px-3 py-2 rounded-xl border border-amber-100 w-fit shadow-sm">
+          <span className="text-xs">⚠️</span>
+          <span>자기부담금 연간입금한도 최대 1,800만원</span>
         </div>
       </div>
 
