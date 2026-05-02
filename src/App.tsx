@@ -119,6 +119,29 @@ function App() {
       <Header />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+        {activeTab === 'consult' && !result && (
+          <div className="mb-12 relative overflow-hidden rounded-[3rem] h-[300px] md:h-[400px] shadow-2xl group">
+            <img 
+              src="/hero-ghibli.png" 
+              alt="Pension Wealth Life" 
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+            <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
+              <span className="inline-block px-4 py-1.5 bg-[var(--color-kb-gold)] text-[var(--color-kb-dark)] text-xs font-black rounded-full mb-4 animate-bounce">
+                Premium AI Coaching
+              </span>
+              <h1 className="text-3xl md:text-5xl font-black mb-4 tracking-tighter drop-shadow-lg leading-tight">
+                당신의 평온한 노후,<br/>
+                <span className="text-[var(--color-kb-gold)]">연금부자</span>가 답을 드립니다.
+              </h1>
+              <p className="text-sm md:text-lg font-bold text-white/80 max-w-xl break-keep">
+                복잡한 연금 자산 관리, 이제 AI의 정밀한 분석과 전문가의 시각으로 가장 최적의 포트폴리오를 제안합니다.
+              </p>
+            </div>
+          </div>
+        )}
+        
         <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
         
         <main className="mt-8">
