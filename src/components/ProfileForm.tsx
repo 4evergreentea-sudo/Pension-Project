@@ -22,22 +22,30 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onChange }) =
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">현재 나이</label>
-            <input
-              type="number"
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">현재 나이 (세)</label>
+            <select
               value={profile.age || ''}
               onChange={(e) => onChange({ age: Number(e.target.value) })}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none"
-            />
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none"
+            >
+              <option value="">선택</option>
+              {Array.from({ length: 62 }, (_, i) => i + 19).map(age => (
+                <option key={age} value={age}>{age}세</option>
+              ))}
+            </select>
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1.5">은퇴 목표 나이</label>
-            <input
-              type="number"
+            <label className="block text-sm font-bold text-gray-700 mb-1.5">은퇴 목표 나이 (세)</label>
+            <select
               value={profile.retirementAge || ''}
               onChange={(e) => onChange({ retirementAge: Number(e.target.value) })}
-              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none"
-            />
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none"
+            >
+              <option value="">선택</option>
+              {Array.from({ length: 61 }, (_, i) => i + 40).map(age => (
+                <option key={age} value={age}>{age}세</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
