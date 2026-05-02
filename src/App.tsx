@@ -15,6 +15,8 @@ import { PortfolioChart } from './components/PortfolioChart';
 import { ResultCards } from './components/ResultCards';
 import { SectorGuide } from './components/SectorGuide';
 import { RebalancingSteps } from './components/RebalancingSteps';
+import { AccountChecklist } from './components/AccountChecklist';
+import { CustomerScript } from './components/CustomerScript';
 import { ConsultationHistory } from './components/ConsultationHistory';
 import { ConsultationDetailModal } from './components/ConsultationDetailModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
@@ -98,12 +100,10 @@ function App() {
       const consultationResult = await fetchConsultation(profile, assets);
       setResult(consultationResult);
       
-      // Save to Supabase (non-blocking)
       saveConsultation(profile, assets, consultationResult).catch(err => {
         console.error('Failed to save consultation:', err);
       });
       
-      // Smooth scroll to top of result
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err: any) {
       setError(err.message || '상담 결과를 가져오는 중 오류가 발생했습니다.');
@@ -126,7 +126,6 @@ function App() {
             <div className="space-y-12">
               {!result && (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                  {/* Left Column: Forms */}
                   <div className="lg:col-span-8 space-y-12 pb-20">
                     <section id="profile-section" className="scroll-mt-32">
                       <ProfileForm profile={profile} onChange={setProfile} />
@@ -137,7 +136,6 @@ function App() {
                     </section>
                   </div>
 
-                  {/* Right Column: Sticky Analysis Sidebar */}
                   <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
                     <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] border border-gray-100 flex flex-col space-y-8">
                       <div className="flex items-center space-x-3">
@@ -147,7 +145,6 @@ function App() {
                       
                       {error && <ErrorBox message={error} />}
 
-                      {/* Disclaimer and Consent Section */}
                       <div className="space-y-4">
                         <div className="flex items-start space-x-3 bg-white p-4 rounded-2xl border border-gray-100">
                           <div className="pt-1">
@@ -191,12 +188,6 @@ function App() {
                             </>
                           )}
                         </button>
-                        
-                        {!profile.disclaimerAccepted && (
-                          <p className="text-[10px] text-amber-600 text-center font-bold animate-pulse">
-                            ⚠️ 동의 후 리포트 생성이 가능합니다.
-                          </p>
-                        )}
                       </div>
                     </div>
 
@@ -208,7 +199,6 @@ function App() {
                 </div>
               )}
 
-              {/* Result Section */}
               {result && (
                 <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 space-y-8 pb-20">
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 px-2">
@@ -229,9 +219,8 @@ function App() {
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    {/* Left Column: Summary & Charts (Sticky on Desktop) */}
                     <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-24">
-                      <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.08)] border border-gray-100 space-y-10">
+                      <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_30px_60px_-12px_rgba(0,0,0,0.08)] border border-gray-50 space-y-10">
                         <PortfolioChart title="현재 자산 배분" data={getCurrentAllocation(assets)} />
                         <div className="border-t border-dashed border-gray-100"></div>
                         <PortfolioChart 
@@ -240,7 +229,6 @@ function App() {
                         />
                       </div>
                       
-                      {/* Quick Indicators */}
                       <div className="grid grid-cols-2 gap-4">
                         <div className="bg-gradient-to-br from-[var(--color-kb-dark)] to-[#444] p-6 rounded-[2rem] text-white shadow-xl">
                           <p className="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">위험 성향</p>
@@ -253,9 +241,7 @@ function App() {
                       </div>
                     </div>
 
-                    {/* Right Column: Detailed Analysis */}
                     <div className="lg:col-span-7 space-y-8">
-                      {/* AI Comprehensive Diagnosis */}
                       <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.05)] border border-gray-50">
                         <h3 className="text-lg font-black text-gray-800 mb-6 flex items-center space-x-2">
                           <span className="text-2xl">✨</span>
@@ -270,7 +256,6 @@ function App() {
                         </div>
                       </div>
 
-                      {/* Target Portfolio Detail Table */}
                       <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.05)] border border-gray-50">
                         <h3 className="text-lg font-black text-gray-800 mb-6 flex items-center space-x-2">
                           <span className="text-2xl">📊</span>
@@ -311,61 +296,67 @@ function App() {
                         </div>
                       </div>
 
-                      {/* Rebalancing & Sector Guide (Accordion Style) */}
-                      <div className="space-y-4">
-                        <details className="group bg-white rounded-[2rem] border border-gray-100 shadow-md overflow-hidden" open>
-                          <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
-                            <h3 className="text-base font-black text-gray-800 flex items-center space-x-2">
-                              <span className="text-xl">🔄</span>
+                      <div className="space-y-6">
+                        <details className="group bg-white rounded-[2.5rem] border border-gray-100 shadow-md overflow-hidden" open>
+                          <summary className="flex items-center justify-between p-8 cursor-pointer list-none hover:bg-gray-50 transition-colors">
+                            <h3 className="text-lg font-black text-gray-800 flex items-center space-x-3">
+                              <span className="w-8 h-8 bg-[#E3F2FD] rounded-xl flex items-center justify-center text-sm">🔄</span>
                               <span>단계별 리밸런싱 가이드</span>
                             </h3>
                             <span className="transition-transform duration-300 group-open:rotate-180">
-                              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
+                              <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
                             </span>
                           </summary>
-                          <div className="px-6 pb-6 animate-in fade-in duration-500">
-                            <RebalancingSteps steps={result.rebalancingSteps} checklist={result.accountChecklist} />
+                          <div className="px-8 pb-8 animate-in fade-in duration-500">
+                            <RebalancingSteps steps={result.rebalancingSteps} />
                           </div>
                         </details>
 
-                        <details className="group bg-white rounded-[2rem] border border-gray-100 shadow-md overflow-hidden">
-                          <summary className="flex items-center justify-between p-6 cursor-pointer list-none">
-                            <h3 className="text-base font-black text-gray-800 flex items-center space-x-2">
-                              <span className="text-xl">🗺️</span>
+                        <details className="group bg-white rounded-[2.5rem] border border-gray-100 shadow-md overflow-hidden" open>
+                          <summary className="flex items-center justify-between p-8 cursor-pointer list-none hover:bg-gray-50 transition-colors">
+                            <h3 className="text-lg font-black text-gray-800 flex items-center space-x-3">
+                              <span className="w-8 h-8 bg-[#E8F5E9] rounded-xl flex items-center justify-center text-sm">✅</span>
+                              <span>계좌별 최종 체크리스트</span>
+                            </h3>
+                            <span className="transition-transform duration-300 group-open:rotate-180">
+                              <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
+                            </span>
+                          </summary>
+                          <div className="px-8 pb-8 animate-in fade-in duration-500">
+                            <AccountChecklist checklist={result.accountChecklist} />
+                          </div>
+                        </details>
+
+                        <details className="group bg-white rounded-[2.5rem] border border-gray-100 shadow-md overflow-hidden">
+                          <summary className="flex items-center justify-between p-8 cursor-pointer list-none hover:bg-gray-50 transition-colors">
+                            <h3 className="text-lg font-black text-gray-800 flex items-center space-x-3">
+                              <span className="w-8 h-8 bg-[#FFF3E0] rounded-xl flex items-center justify-center text-sm">🗺️</span>
                               <span>섹터별 투자 가이드</span>
                             </h3>
                             <span className="transition-transform duration-300 group-open:rotate-180">
-                              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
+                              <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M19 9l-7 7-7-7" /></svg>
                             </span>
                           </summary>
-                          <div className="px-6 pb-6 animate-in fade-in duration-500">
+                          <div className="px-8 pb-8 animate-in fade-in duration-500">
                             <SectorGuide guide={result.sectorGuide} />
                           </div>
                         </details>
                       </div>
                       
-                      {/* Customer Script Section */}
-                      <div className="bg-[var(--color-kb-dark)] rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-48 h-48 bg-[var(--color-kb-gold)] opacity-5 rounded-full -mr-24 -mt-24 transition-transform group-hover:scale-110"></div>
-                        <h3 className="text-lg font-black mb-4 text-[var(--color-kb-gold)] flex items-center space-x-2">
-                          <span>💬</span>
-                          <span>고객 응대용 요약</span>
-                        </h3>
-                        <p className="text-lg leading-relaxed opacity-90 italic font-medium">
-                          "{result.customerScript}"
-                        </p>
-                      </div>
+                      <CustomerScript script={result.customerScript} />
 
-                      {/* Bottom Action */}
                       <div className="pt-8 text-center">
                         <button 
                           onClick={() => { setResult(null); setError(null); }}
-                          className="group relative inline-flex items-center justify-center px-12 py-5 font-black text-white transition-all duration-300 bg-[var(--color-kb-dark)] rounded-2xl hover:bg-black shadow-2xl hover:-translate-y-1"
+                          className="group relative inline-flex items-center justify-center px-12 py-5 font-black text-white transition-all duration-300 bg-[var(--color-kb-dark)] rounded-[2rem] hover:bg-black shadow-2xl hover:-translate-y-1"
                         >
                           <span className="mr-3 text-lg">새로운 진단 시작하기</span>
                           <svg className="w-6 h-6 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                         </button>
-                        <p className="mt-6 text-[10px] text-gray-400 font-medium">※ 본 리포트는 AI의 분석 결과로, 실제 투자 시 원금 손실이 발생할 수 있음을 유의하시기 바랍니다.</p>
+                        <p className="mt-8 text-[11px] text-gray-400 font-medium leading-relaxed">
+                          ※ 본 리포트는 입력하신 데이터를 바탕으로 생성된 인공지능 기반의 참고용 자료입니다.<br/>
+                          실제 투자 시 원금 손실이 발생할 수 있으며, 최종 의사결정은 고객 본인의 책임하에 이루어져야 합니다.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -373,7 +364,6 @@ function App() {
               )}
             </div>
           ) : (
-            /* History Tab */
             <div className="fade-in pb-20">
               {historyLoading ? (
                 <div className="py-20 flex justify-center"><LoadingSpinner /></div>
@@ -390,14 +380,12 @@ function App() {
         </main>
       </div>
 
-      {/* Footer / Copyright */}
       <footer className="py-12 border-t border-gray-200 text-center text-gray-400 text-[11px] leading-relaxed">
         &copy; 2026 연금부자서비스. All rights reserved.<br/>
         본 서비스는 KB국민은행의 공식 서비스가 아닌 교육/실습용 MVP 프로젝트입니다.<br/>
         Google Gemini 3 Flash 인공지능 모델을 사용합니다.
       </footer>
 
-      {/* Modal */}
       {showDisclaimerModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
           <div className="bg-white rounded-[2.5rem] w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl flex flex-col">
