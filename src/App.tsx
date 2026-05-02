@@ -199,10 +199,6 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-[var(--color-kb-gold)] to-[#FFCC00] p-8 rounded-[2.5rem] shadow-xl text-[var(--color-kb-dark)]">
-                      <p className="text-[11px] font-black uppercase tracking-widest opacity-60 mb-2">My Service Status</p>
-                      <h4 className="text-2xl font-black leading-tight">프리미엄 AI<br/>포트폴리오 진단</h4>
-                    </div>
                   </div>
                 </div>
               )}
