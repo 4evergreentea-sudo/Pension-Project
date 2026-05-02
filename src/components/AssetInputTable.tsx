@@ -74,14 +74,20 @@ export const AssetInputTable: React.FC<AssetInputTableProps> = ({ assets, onAdd,
 
             <div className="flex items-end space-x-4">
               <div className="flex-1">
-                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">평가금액 (원)</label>
-                <input
-                  type="number"
-                  value={asset.amount || ''}
-                  onChange={(e) => onChange(asset.id, { amount: Number(e.target.value) })}
-                  placeholder="0"
-                  className="w-full text-xl font-bold bg-transparent border-b border-gray-200 focus:border-[var(--color-kb-gold)] outline-none pb-2 transition-all placeholder:text-gray-200"
-                />
+                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1.5 ml-1">평가금액 (백만 원)</label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={asset.amount ? asset.amount / 1000000 : ''}
+                    onChange={(e) => onChange(asset.id, { amount: Math.round(Number(e.target.value) * 1000000) })}
+                    placeholder="0"
+                    className="w-full text-xl font-bold bg-transparent border-b border-gray-200 focus:border-[var(--color-kb-gold)] outline-none pb-2 transition-all placeholder:text-gray-200 pr-16"
+                  />
+                  <div className="absolute right-0 bottom-2 text-sm font-bold text-gray-300">
+                    백만 원
+                  </div>
+                </div>
               </div>
               <button
                 onClick={() => onRemove(asset.id)}
