@@ -127,7 +127,6 @@ function App() {
     }
   };
 
-  const [hasConsented, setHasConsented] = useState(false);
   const [showDisclaimerModal, setShowDisclaimerModal] = useState(false);
 
   const scrollToInput = () => {
@@ -237,8 +236,8 @@ function App() {
                           <input
                             id="consent"
                             type="checkbox"
-                            checked={hasConsented}
-                            onChange={(e) => setHasConsented(e.target.checked)}
+                            checked={profile.disclaimerAccepted}
+                            onChange={(e) => setProfile({ ...profile, disclaimerAccepted: e.target.checked })}
                             className="w-5 h-5 rounded border-gray-300 text-[var(--color-kb-gold)] focus:ring-[var(--color-kb-gold)] cursor-pointer"
                           />
                         </div>
@@ -255,10 +254,10 @@ function App() {
 
                       <button
                         onClick={handleStartAnalysis}
-                        disabled={loading || !hasConsented}
+                        disabled={loading || !profile.disclaimerAccepted}
                         className={`w-full py-6 text-lg font-black rounded-[1.5rem] transition-all duration-300 flex flex-col items-center justify-center space-y-1 ${
-                          !hasConsented 
-                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed border-2 border-dashed border-gray-200' 
+                          !profile.disclaimerAccepted 
+                            ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
                             : 'bg-[var(--color-kb-dark)] text-[var(--color-kb-gold)] shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] hover:-translate-y-1'
                         }`}
                       >
@@ -275,7 +274,7 @@ function App() {
                         )}
                       </button>
                       
-                      {!hasConsented && (
+                      {!profile.disclaimerAccepted && (
                         <p className="text-[10px] text-amber-600 text-center font-bold animate-pulse">
                           ⚠️ 동의 후 리포트 생성이 가능합니다.
                         </p>
@@ -314,7 +313,7 @@ function App() {
                       <div className="p-8 bg-gray-50/50 border-t border-gray-50 text-center">
                         <button 
                           onClick={() => {
-                            setHasConsented(true);
+                            setProfile({ ...profile, disclaimerAccepted: true });
                             setShowDisclaimerModal(false);
                           }}
                           className="kb-button-primary px-12 py-4 rounded-xl font-black"
