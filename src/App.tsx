@@ -16,22 +16,13 @@ import { SectorGuide } from './components/SectorGuide';
 import { RebalancingSteps } from './components/RebalancingSteps';
 import { AccountChecklist } from './components/AccountChecklist';
 import { CustomerScript } from './components/CustomerScript';
+import { PortfolioDetailTable } from './components/PortfolioDetailTable';
 import { ConsultationHistory } from './components/ConsultationHistory';
 import { ConsultationDetailModal } from './components/ConsultationDetailModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ErrorBox } from './components/ErrorBox';
 
-// Premium Palette Shared across charts and tables
-const COLORS = [
-  '#FFCC00', // KB Gold
-  '#333333', // KB Deep Gray
-  '#FF9900', // Orange Accent
-  '#555555', // Medium Gray
-  '#FFD633', // Light Gold
-  '#1A1A1A', // Near Black
-  '#FFB300', // Amber Gold
-  '#777777', // Light Gray
-];
+// (removed unused COLORS array)
 
 function App() {
   const [activeTab, setActiveTab] = useState<'consult' | 'history'>('consult');
@@ -97,7 +88,6 @@ function App() {
 
     setLoading(true);
     try {
-      // Calculate heuristic diagnosis for AI context
       const { profile: heuristicRisk } = calculateRiskProfile(profile);
       const heuristicTarget = getModelPortfolio(heuristicRisk);
       const currentAllocation = getCurrentAllocation(assets);
@@ -110,7 +100,6 @@ function App() {
       );
       setResult(consultationResult);
       
-      // Save to Supabase (non-blocking)
       saveConsultation(profile, assets, consultationResult, currentAllocation).catch(err => {
         console.error('Failed to save consultation:', err);
       });
@@ -273,7 +262,7 @@ function App() {
                                 <span className={`w-2 h-2 rounded-full ${diag.severity === '위험' ? 'bg-red-500' : diag.severity === '주의' ? 'bg-amber-500' : 'bg-green-500'}`}></span>
                                 <span>{diag.title}</span>
                               </h4>
-                              <p className="text-sm font-bold text-gray-600 leading-relaxed">{diag.description}</p>
+                              <p className="text-sm font-bold text-gray-600 leading-relaxed break-keep">{diag.description}</p>
                             </div>
                           ))}
                         </div>
@@ -284,39 +273,7 @@ function App() {
                           <span className="text-2xl">📊</span>
                           <span>상세 포트폴리오 구성</span>
                         </h3>
-                        <div className="overflow-hidden rounded-2xl border border-gray-50">
-                          <table className="w-full text-left border-collapse">
-                            <thead>
-                              <tr className="bg-gray-50/50">
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-wider">자산군</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-wider text-right">비중</th>
-                                <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-wider text-right">설명</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                              {result.targetPortfolio.map((item, idx) => (
-                                <tr key={idx} className="hover:bg-gray-50/30 transition-colors">
-                                  <td className="px-6 py-4">
-                                    <div className="flex items-center space-x-3">
-                                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[idx % COLORS.length] }}></div>
-                                      <span className="text-xs font-black text-gray-700">{item.assetClass}</span>
-                                    </div>
-                                  </td>
-                                  <td className="px-6 py-4 text-right">
-                                    <span className="text-sm font-black text-[var(--color-kb-dark)] bg-[#FFFDE7] px-3 py-1 rounded-lg">
-                                      {item.percent}%
-                                    </span>
-                                  </td>
-                                  <td className="px-6 py-4">
-                                    <p className="text-[10px] text-gray-500 font-medium leading-tight max-w-[200px]">
-                                      {item.reason}
-                                    </p>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
+                        <PortfolioDetailTable items={result.targetPortfolio} />
                       </div>
 
                       <div className="space-y-6">

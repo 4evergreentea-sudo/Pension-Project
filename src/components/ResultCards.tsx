@@ -2,6 +2,7 @@ import React from 'react';
 import type { DiagnosisResult, TargetPortfolioItem } from '../types';
 import { Badge } from './Badge';
 import { CheckCircle2, AlertCircle, XCircle, TrendingUp } from 'lucide-react';
+import { PortfolioDetailTable } from './PortfolioDetailTable';
 
 interface ResultCardsProps {
   headline: string;
@@ -49,7 +50,7 @@ export const ResultCards: React.FC<ResultCardsProps> = ({ headline, riskProfile,
               <div className="mt-0.5">{getSeverityIcon(item.severity)}</div>
               <div>
                 <h4 className="font-bold text-gray-900 text-sm mb-1">{item.title}</h4>
-                <p className="text-gray-600 text-[13px] leading-relaxed">{item.description}</p>
+                <p className="text-gray-600 text-[13px] leading-relaxed break-keep">{item.description}</p>
               </div>
             </div>
           ))}
@@ -57,19 +58,12 @@ export const ResultCards: React.FC<ResultCardsProps> = ({ headline, riskProfile,
       </div>
 
       {/* Target Portfolio Details */}
-      <div>
-        <h3 className="text-lg font-bold text-gray-900 mb-4 px-1">추천 모델 포트폴리오 상세</h3>
-        <div className="grid grid-cols-1 gap-3">
-          {targetPortfolio.map((item, idx) => (
-            <div key={idx} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-gray-900">{item.assetClass}</span>
-                <span className="text-blue-600 font-black text-lg">{item.percent}%</span>
-              </div>
-              <p className="text-gray-500 text-xs leading-relaxed">{item.reason}</p>
-            </div>
-          ))}
-        </div>
+      <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+        <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center space-x-2">
+          <span className="text-xl">📊</span>
+          <span>추천 모델 포트폴리오 상세</span>
+        </h3>
+        <PortfolioDetailTable items={targetPortfolio} />
       </div>
     </div>
   );
