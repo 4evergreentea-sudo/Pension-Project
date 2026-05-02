@@ -128,6 +128,10 @@ function App() {
     }
   };
 
+  const scrollToInput = () => {
+    document.getElementById('input-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-[var(--color-kb-bg)] flex flex-col font-sans">
       <Header />
@@ -145,7 +149,10 @@ function App() {
               연말정산부터 퇴직연금까지 한번에!
             </p>
             <div className="pt-2">
-              <button className="kb-button-primary shadow-lg shadow-[#FFCC00]/30 px-8">
+              <button 
+                onClick={scrollToInput}
+                className="kb-button-primary shadow-lg shadow-[#FFCC00]/30 px-8"
+              >
                 나만의 연금 진단받기
               </button>
             </div>
@@ -172,7 +179,7 @@ function App() {
           <div className="space-y-8 pb-20">
             {/* Input Section */}
             {!result && !loading && (
-              <div className="fade-in">
+              <div id="input-section" className="fade-in">
                 <div className="kb-card p-6 sm:p-10 mb-8">
                   <div className="flex items-center space-x-2 mb-8">
                     <div className="w-1.5 h-6 bg-[var(--color-kb-gold)] rounded-full"></div>
