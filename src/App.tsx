@@ -129,29 +129,67 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[var(--color-kb-bg)] flex flex-col font-sans">
       <Header />
       
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
-        <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+      {/* Hero Banner Section */}
+      <div className="bg-white border-b border-gray-100 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6 py-10 sm:py-16 flex flex-col sm:flex-row items-center justify-between gap-8">
+          <div className="flex-1 space-y-4 text-center sm:text-left">
+            <h2 className="text-3xl sm:text-4xl font-black text-gray-900 leading-[1.2]">
+              개인형IRP <br className="hidden sm:block" />
+              하시나요?
+            </h2>
+            <p className="text-gray-500 text-sm sm:text-base font-medium leading-relaxed">
+              소득이 있는 국민 누구나<br/>
+              연말정산부터 퇴직연금까지 한번에!
+            </p>
+            <div className="pt-2">
+              <button className="kb-button-primary shadow-lg shadow-[#FFCC00]/30 px-8">
+                나만의 연금 진단받기
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 flex justify-center sm:justify-end relative">
+            <div className="w-64 h-64 sm:w-80 sm:h-80 relative z-10">
+              <img 
+                src="/kb_pension_hero_banner_1777697461912.png" 
+                alt="KB Pension Hero" 
+                className="w-full h-full object-contain drop-shadow-2xl"
+              />
+            </div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-[#FFCC00]/10 rounded-full blur-3xl"></div>
+          </div>
+        </div>
+      </div>
+
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
+        <div className="mb-8">
+          <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
 
         {activeTab === 'consult' ? (
           <div className="space-y-8 pb-20">
             {/* Input Section */}
             {!result && !loading && (
-              <div className="animate-in fade-in duration-500">
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm mb-8">
-                  <h2 className="text-xl font-bold text-gray-900 mb-6">내 연금 정보 입력</h2>
+              <div className="fade-in">
+                <div className="kb-card p-6 sm:p-10 mb-8">
+                  <div className="flex items-center space-x-2 mb-8">
+                    <div className="w-1.5 h-6 bg-[var(--color-kb-gold)] rounded-full"></div>
+                    <h2 className="text-xl font-bold text-gray-900">내 연금 정보 입력</h2>
+                  </div>
                   <ProfileForm 
                     profile={profile} 
                     onChange={(updates) => setProfile({ ...profile, ...updates })} 
                   />
-                  <AssetInputTable 
-                    assets={assets} 
-                    onAdd={handleAddAsset} 
-                    onRemove={handleRemoveAsset} 
-                    onChange={handleChangeAsset} 
-                  />
+                  <div className="mt-10">
+                    <AssetInputTable 
+                      assets={assets} 
+                      onAdd={handleAddAsset} 
+                      onRemove={handleRemoveAsset} 
+                      onChange={handleChangeAsset} 
+                    />
+                  </div>
                 </div>
 
                 <DisclaimerBox 
@@ -161,42 +199,51 @@ function App() {
 
                 {error && <ErrorBox message={error} />}
 
-                <button
-                  onClick={handleStartAnalysis}
-                  className="w-full bg-blue-600 text-white py-4 rounded-2xl text-lg font-black shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all"
-                >
-                  AI 포트폴리오 상담 시작하기
-                </button>
+                <div className="mt-10">
+                  <button
+                    onClick={handleStartAnalysis}
+                    className="kb-button-primary w-full text-lg py-5 shadow-xl shadow-[#FFCC00]/20"
+                  >
+                    AI 포트폴리오 상담 시작하기
+                  </button>
+                </div>
               </div>
             )}
 
             {/* Loading Section */}
             {loading && (
-              <div className="bg-white rounded-3xl p-12 border border-gray-100 shadow-sm flex flex-col items-center justify-center min-h-[400px]">
+              <div className="kb-card p-12 flex flex-col items-center justify-center min-h-[400px]">
                 <LoadingSpinner message="Gemini 3 Flash가 연금 포트폴리오를 분석 중입니다..." />
               </div>
             )}
 
             {/* Result Section */}
             {result && !loading && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-10">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-black text-gray-900 tracking-tight">상담 결과</h2>
+              <div className="fade-in space-y-10">
+                <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-1.5 h-6 bg-[var(--color-kb-gold)] rounded-full"></div>
+                    <h2 className="text-2xl font-black text-gray-900 tracking-tight">상담 결과</h2>
+                  </div>
                   <button
                     onClick={() => { setResult(null); setError(null); }}
-                    className="text-sm font-bold text-gray-400 hover:text-gray-600"
+                    className="text-sm font-bold text-gray-400 hover:text-[var(--color-kb-gold-dark)] transition-colors"
                   >
                     새로 상담하기
                   </button>
                 </div>
 
                 {/* Charts */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <PortfolioChart title="현재 자산 배분" data={getCurrentAllocation(assets)} />
-                  <PortfolioChart 
-                    title="추천 목표 포트폴리오" 
-                    data={result.targetPortfolio.map(item => ({ name: item.assetClass, value: item.percent }))} 
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="kb-card p-6">
+                    <PortfolioChart title="현재 자산 배분" data={getCurrentAllocation(assets)} />
+                  </div>
+                  <div className="kb-card p-6">
+                    <PortfolioChart 
+                      title="추천 목표 포트폴리오" 
+                      data={result.targetPortfolio.map(item => ({ name: item.assetClass, value: item.percent }))} 
+                    />
+                  </div>
                 </div>
 
                 <ResultCards 
@@ -213,16 +260,17 @@ function App() {
                   checklist={result.accountChecklist} 
                 />
 
-                <div className="bg-blue-600 rounded-3xl p-6 text-white shadow-lg">
-                  <h3 className="text-lg font-bold mb-3">고객 응대용 3문장 요약</h3>
-                  <p className="text-sm leading-relaxed opacity-90 italic">
+                <div className="bg-[var(--color-kb-dark)] rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--color-kb-gold)] opacity-10 rounded-full -mr-16 -mt-16"></div>
+                  <h3 className="text-lg font-bold mb-4 text-[var(--color-kb-gold)]">고객 응대용 3문장 요약</h3>
+                  <p className="text-base leading-relaxed opacity-90 italic">
                     "{result.customerScript}"
                   </p>
                 </div>
 
                 <button
                   onClick={() => { setResult(null); setError(null); }}
-                  className="w-full bg-gray-900 text-white py-4 rounded-2xl text-lg font-bold hover:bg-black transition-colors"
+                  className="w-full bg-white border-2 border-gray-200 text-gray-700 py-4 rounded-full text-lg font-bold hover:bg-gray-50 transition-all shadow-sm"
                 >
                   다른 자산으로 다시 상담하기
                 </button>
@@ -231,7 +279,7 @@ function App() {
           </div>
         ) : (
           /* History Tab */
-          <div className="animate-in fade-in duration-500 pb-20">
+          <div className="fade-in pb-20">
             {historyLoading ? (
               <div className="py-20 flex justify-center"><LoadingSpinner /></div>
             ) : (
@@ -247,9 +295,10 @@ function App() {
       </main>
 
       {/* Footer / Copyright */}
-      <footer className="py-8 text-center text-gray-400 text-[10px]">
+      <footer className="py-12 border-t border-gray-200 text-center text-gray-400 text-[11px] leading-relaxed">
         &copy; 2026 연금부자서비스. All rights reserved.<br/>
-        본 서비스는 Gemini 3 Flash 인공지능 모델을 사용합니다.
+        본 서비스는 KB국민은행의 공식 서비스가 아닌 교육/실습용 MVP 프로젝트입니다.<br/>
+        Google Gemini 3 Flash 인공지능 모델을 사용합니다.
       </footer>
 
       {/* Modal */}
