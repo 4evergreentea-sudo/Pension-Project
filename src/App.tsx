@@ -129,7 +129,7 @@ function App() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
             <div className="absolute bottom-0 left-0 p-8 md:p-12 text-white">
               <span className="inline-block px-4 py-1.5 bg-[var(--color-kb-gold)] text-[var(--color-kb-dark)] text-xs font-black rounded-full mb-4 animate-bounce">
-                Premium AI Coaching
+                KB연금부자
               </span>
               <h1 className="text-3xl md:text-5xl font-black mb-4 tracking-tighter drop-shadow-lg leading-tight">
                 당신의 평온한 노후,<br/>
