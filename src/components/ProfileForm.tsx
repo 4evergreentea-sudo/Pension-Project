@@ -90,47 +90,69 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onChange }) =
         </div>
       </div>
 
-      {/* Group 4: 투자 성향 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-gray-100">
-        <div className="space-y-3">
+      {/* Group 4: 투자 성향 시각화 개선 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-100">
+        <div className="space-y-4">
           <div>
             <label className="kb-label mb-0">투자 경험</label>
-            <p className="text-[11px] text-gray-400 mb-3">본인의 투자 숙련도를 선택해 주세요.</p>
-            <div className="grid grid-cols-4 gap-2">
-              {(['없음', '조금 있음', '보통', '많음'] as const).map((level) => (
-                <button
-                  key={level}
-                  onClick={() => onChange({ investmentExperience: level })}
-                  className={`py-2.5 text-[11px] font-bold rounded-xl border transition-all ${
-                    profile.investmentExperience === level
-                      ? 'bg-[var(--color-kb-dark)] text-[var(--color-kb-gold)] border-[var(--color-kb-dark)] shadow-md'
-                      : 'bg-white text-gray-400 border-gray-100 hover:border-[var(--color-kb-gold)]'
-                  }`}
-                >
-                  {level}
-                </button>
-              ))}
+            <p className="text-[11px] text-gray-400 mb-4">본인의 투자 숙련도를 선택해 주세요.</p>
+            <div className="grid grid-cols-4 gap-2.5">
+              {(['없음', '조금 있음', '보통', '많음'] as const).map((level) => {
+                const tooltips = {
+                  '없음': '처음이에요',
+                  '조금 있음': '공부 중',
+                  '보통': '숙련된 투자',
+                  '많음': '전문가 수준'
+                };
+                return (
+                  <button
+                    key={level}
+                    onClick={() => onChange({ investmentExperience: level })}
+                    className={`flex flex-col items-center py-3 px-1 rounded-2xl border transition-all duration-300 transform ${
+                      profile.investmentExperience === level
+                        ? 'bg-[var(--color-kb-dark)] text-[var(--color-kb-gold)] border-[var(--color-kb-dark)] scale-105 shadow-lg z-10'
+                        : 'bg-white text-gray-400 border-gray-100 hover:border-[var(--color-kb-gold)] hover:scale-[1.02]'
+                    }`}
+                  >
+                    <span className="text-[11px] font-black mb-1">{level}</span>
+                    <span className={`text-[9px] opacity-60 ${profile.investmentExperience === level ? 'text-[var(--color-kb-gold)]' : 'text-gray-400'}`}>
+                      {tooltips[level]}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
             <label className="kb-label mb-0">감내 가능한 최대 손실</label>
-            <p className="text-[11px] text-gray-400 mb-3">하락장에서 견딜 수 있는 최대 하락폭입니다.</p>
-            <div className="grid grid-cols-4 gap-2">
-              {(['-5%', '-10%', '-20%', '-30% 이상'] as const).map((loss) => (
-                <button
-                  key={loss}
-                  onClick={() => onChange({ riskTolerance: loss })}
-                  className={`py-2.5 text-[11px] font-bold rounded-xl border transition-all ${
-                    profile.riskTolerance === loss
-                      ? 'bg-[var(--color-kb-dark)] text-[var(--color-kb-gold)] border-[var(--color-kb-dark)] shadow-md'
-                      : 'bg-white text-gray-400 border-gray-100 hover:border-[var(--color-kb-gold)]'
-                  }`}
-                >
-                  {loss}
-                </button>
-              ))}
+            <p className="text-[11px] text-gray-400 mb-4">하락장에서 견딜 수 있는 최대 하락폭입니다.</p>
+            <div className="grid grid-cols-4 gap-2.5">
+              {(['-5%', '-10%', '-20%', '-30% 이상'] as const).map((loss) => {
+                const tooltips = {
+                  '-5%': '매우 안정',
+                  '-10%': '안정 추구',
+                  '-20%': '위험 중립',
+                  '-30% 이상': '수익 추구'
+                };
+                return (
+                  <button
+                    key={loss}
+                    onClick={() => onChange({ riskTolerance: loss })}
+                    className={`flex flex-col items-center py-3 px-1 rounded-2xl border transition-all duration-300 transform ${
+                      profile.riskTolerance === loss
+                        ? 'bg-[var(--color-kb-dark)] text-[var(--color-kb-gold)] border-[var(--color-kb-dark)] scale-105 shadow-lg z-10'
+                        : 'bg-white text-gray-400 border-gray-100 hover:border-[var(--color-kb-gold)] hover:scale-[1.02]'
+                    }`}
+                  >
+                    <span className="text-[11px] font-black mb-1">{loss}</span>
+                    <span className={`text-[9px] opacity-60 ${profile.riskTolerance === loss ? 'text-[var(--color-kb-gold)]' : 'text-gray-400'}`}>
+                      {tooltips[loss]}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
