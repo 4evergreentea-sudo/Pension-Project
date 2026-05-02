@@ -38,7 +38,7 @@ export const AssetInputTable: React.FC<AssetInputTableProps> = ({ assets, onAdd,
         </div>
         <button
           onClick={onAdd}
-          className="flex items-center space-x-1.5 bg-[#FFFDE7] text-[var(--color-kb-dark)] px-5 py-2.5 rounded-full text-sm font-black border border-[var(--color-kb-gold)] hover:bg-[var(--color-kb-gold)] transition-all shadow-sm"
+          className="flex items-center space-x-1.5 bg-[#FFFDE7] text-[var(--color-kb-dark)] px-4 sm:px-5 py-2.5 rounded-full text-sm font-black border border-[var(--color-kb-gold)] hover:bg-[var(--color-kb-gold)] transition-all shadow-sm flex-shrink-0 whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           <span>자산 추가</span>
